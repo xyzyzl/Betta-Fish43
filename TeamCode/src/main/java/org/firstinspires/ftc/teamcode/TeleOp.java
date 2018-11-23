@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.Robot;
 
 import static java.lang.Math.abs;
 
-/**
- * Created by tejbade on 10/8/18.
+/*
+ * Created by Tej Bade on 10/6/18.
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")

@@ -3,12 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
 /**
- * Created by tejbade on 10/6/18.
+ * Created by Tej Bade on 10/6/18.
  */
 
-/**
- * Created by tejbade on 10/6/18.
- */
 
 @Autonomous(name="Depot Strafe")
 public class AutoOpDepotStrafe extends AutoOpBase {
@@ -22,8 +19,8 @@ public class AutoOpDepotStrafe extends AutoOpBase {
 
         driveForwardDistance(r.getCurrentAngle(), 32, 0.8); //drive forward away from lander
         double angle = r.getCurrentAngle()+3;
-        r.turnLeft(angle);
-        mecanumStrafeRight(0.7, 2500); //align with wall
+        turnLeftToAngle(angle);
+        mecanumStrafeRightTime(0.7, 2500); //align with wall
 
         r.intakeArm.setPower(0.5);
         sleep(200);
@@ -34,7 +31,7 @@ public class AutoOpDepotStrafe extends AutoOpBase {
         sleep(1500);
         r.intakeArm.setPower(0);
 
-        mecanumStrafeLeft(0.8, 500);
+        mecanumStrafeLeftTime(0.8, 500);
         driveBackwardDistance(15, 0.8);
         angle = r.getCurrentAngle() - 180;
         turnRightToAngle(angle); //turn to crater

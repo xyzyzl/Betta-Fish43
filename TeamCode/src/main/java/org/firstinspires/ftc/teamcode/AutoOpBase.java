@@ -1,17 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by tejbade on 10/6/18.
- * <p>
- * Created by tejbade on 10/6/18.
- */
-
-/**
- * Created by tejbade on 10/6/18.
+/*
+ * Created by Tej Bade on 10/6/18.
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.Robot;
 
 public abstract class AutoOpBase extends LinearOpMode {
@@ -232,7 +225,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.stopDriving();
     }
 
-    public void mecanumStrafeLeftTime(double power, long time) {
+    public void mecanumStrafeLeftTime(double power, int time) {
         if(opModeIsActive()) {
             r.mecanumStrafeLeft(power);
             sleep(time);
@@ -240,7 +233,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
     }
 
-    public void mecanumStrafeRightTime(double power, long time) {
+    public void mecanumStrafeRightTime(double power, int time) {
         if(opModeIsActive()) {
             r.mecanumStrafeRight(power);
             sleep(time);
