@@ -36,7 +36,7 @@ public class Robot {
     public DcMotor leftFront;
     public DcMotor rightFront;
     public DcMotor leftBack;
-    public DcMotor rightBack; //reverse
+    public DcMotor rightBack;
     public DcMotor winch;
     public DcMotor intakeArm;
     public DcMotor intake;
