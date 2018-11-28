@@ -27,8 +27,10 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.winch.setPower(-1);
         sleep(4200);
         r.winch.setPower(0);
+        sampling();
         driveBackwardDistance(2, 0.3);
         mecanumStrafeRightTime(0.8, 400);
+        driveForwardDistance(10, 0.5);
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -246,7 +248,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
     }
 
-    public int sampling() {
+    private void sampling() {
 
         r.initVuforia();
 
@@ -263,8 +265,7 @@ public abstract class AutoOpBase extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (r.tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
+                // getUpdatedRecognitions() will return null if no new information is available since the last time that call was made.
                 List<Recognition> updatedRecognitions = r.tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null && updatedRecognitions.size() == 3) {
                         int goldMineralX = -1;
@@ -297,12 +298,24 @@ public abstract class AutoOpBase extends LinearOpMode {
                             r.tfod.shutdown();
                         }
 
-                        return r.location;
+                        return;
                 }
 
             }
         }
-        return r.location;
+    }
+
+    public void dropMarker() {
+        if(opModeIsActive()) {
+            r.intakeArm.setPower(0.5);
+            sleep(200);
+            r.intake.setPower(0.7);
+            sleep(4000); //spin outward for 4 secs.
+            r.intake.setPower(0);
+            r.intakeArm.setPower(-1);
+            sleep(1500);
+            r.intakeArm.setPower(0);
+        }
     }
 
 }

@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import org.firstinspires.ftc.teamcode.Robot;
-
-import static java.lang.Math.abs;
-
 /*
  * Created by Tej Bade on 10/6/18.
  */
@@ -47,8 +43,10 @@ public class TeleOp extends LinearOpMode {
             else
                 r.stopDriving();
 
-            if (gamepad1.left_stick_button)
+            if (gamepad1.left_stick_button) {
                 direction = -direction;
+                sleep(100);
+            }
 
             //Gamepad 2
 

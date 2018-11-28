@@ -14,7 +14,6 @@ public class AutoOpCraterBasic extends AutoOpBase {
 
         waitForStart();
 
-        int sampling = sampling();
 
         while (opModeIsActive()) {
             idle();
