@@ -20,10 +20,10 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Joystick value test
-            telemetry.addData("leftX", gamepad1.left_stick_x + " ");
-            telemetry.addData("leftY", gamepad1.left_stick_y + " ");
-            telemetry.addData("rightX", gamepad1.right_stick_x + " ");
-            telemetry.addData("rightY", gamepad1.right_stick_y + " ");
+            telemetry.addData("leftX", gamepad1.left_stick_x);
+            telemetry.addData("leftY", gamepad1.left_stick_y);
+            telemetry.addData("rightX", gamepad1.right_stick_x);
+            telemetry.addData("rightY", gamepad1.right_stick_y);
             telemetry.update();
 
             //Gamepad 1
