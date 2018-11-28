@@ -14,9 +14,7 @@ public class AutoOpCraterBasic extends AutoOpBase {
 
         waitForStart();
 
-        TensorFlowSampling tf = new TensorFlowSampling(hardwareMap, telemetry);
-        telemetry.addData("Location: ", tf.location);
-        telemetry.update();
+        int sampling = sampling();
 
         while (opModeIsActive()) {
             idle();
