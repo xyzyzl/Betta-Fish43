@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-/*
- * Created by Tej Bade on 10/6/18.
- */
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-@Autonomous(name="Crater")
+@Autonomous(name = "Crater")
 public class AutoOpCrater extends AutoOpBase {
 
     public void runOpMode() throws InterruptedException {
@@ -14,62 +14,45 @@ public class AutoOpCrater extends AutoOpBase {
 
         waitForStart();
 
-        startRobot(); //drop down and strafe out of hook
+        startRobot(); //drop down, sample and strafe out of hook
+        double maintain;
 
-        telemetry.addData("Step 1: ", "Completed");
-        telemetry.update();
+        if (r.location == 0) { // left from robot's point of view
+            mecanumStrafeLeftTime(0.5, 2000);
+            driveForwardDistance(20, 0.5);
+            driveBackwardDistance(10, 0.5);
+            turnRightToAngle(r.getCurrentAngle() - 90);
+            driveForwardDistance(50, 1);
+        } else if (r.location == 2) { // right from robot's point of view
+            mecanumStrafeLeftTime(0.5, 1000);
+            driveForwardDistance(20, 0.5);
+            sleep(100);
+            driveBackwardDistance(10, 0.5);
+            turnRightToAngle(r.getCurrentAngle() - 90);
+            driveForwardDistance(25, 1);
+        } else { // center from robot's point of view
+            mecanumStrafeRightTime(0.5, 1000);
+            driveForwardDistance(20, 0.5);
+            sleep(100);
+            driveBackwardDistance(10, 0.5);
+            turnRightToAngle(r.getCurrentAngle() - 90);
+            driveForwardDistance(30, 1);
+        }
 
-        double maintainAngle = r.getCurrentAngle();
-        driveForwardDistance(maintainAngle, 19, 0.5); //drive forward away from lander
-        sleep(200);
-
-        turnLeftToAngle(90);
-        sleep(200);
-
-        maintainAngle = r.getCurrentAngle();
-        driveForwardDistance(maintainAngle, 46, 0.5); //drive to wall
-        sleep(1000);
-
-        double angle = r.getCurrentAngle()+1;
-
+        double angle = r.getCurrentAngle() + 1;
         turnLeftToAngle(angle); //turn to depot
         sleep(500);
 
-        maintainAngle = r.getCurrentAngle();
-        driveForwardDistance(maintainAngle, 27, 0.5); //drive to depot
-
-        telemetry.addData("Step 2: ", "Completed");
-        telemetry.update();
-
-        r.intakeArm.setPower(1);
-        sleep(200);
-        r.intake.setPower(1);
-        sleep(4000); //spin outward for 4 secs.
-        r.intake.setPower(0);
-        r.intakeArm.setPower(-1);
-        sleep(1500);
-        r.intakeArm.setPower(0);
-
-        telemetry.addData("Step 3: ", "Completed");
-        telemetry.update();
-
-        double angle1 = r.getCurrentAngle() - 180;
-        turnRightToAngle(angle1); //turn to crater
-        sleep(100);
-
-        maintainAngle = r.getCurrentAngle();
-        driveForwardDistance(maintainAngle, 65, 1); //drive to crater
-
-        r.intakeArm.setPower(1); //put intake in crater
-
-        telemetry.addData("Step 4: ", "Completed");
-        telemetry.update();
-
-        while (opModeIsActive()) {
-            idle();
-        }
-
+        maintain = r.getCurrentAngle();
+        driveForwardDistance(maintain, 36, 1);
+        angle = r.getCurrentAngle() + 0.5;
+        turnLeftToAngle(angle);
+        maintain = r.getCurrentAngle();
+        driveForwardDistance(maintain, 30, 0.8);
+        angle = r.getCurrentAngle() + 2;
+        turnRightToAngle(angle);
+        maintain = r.getCurrentAngle();
+        driveForwardDistance(maintain, 75, 1);
         r.stop();
     }
-
 }

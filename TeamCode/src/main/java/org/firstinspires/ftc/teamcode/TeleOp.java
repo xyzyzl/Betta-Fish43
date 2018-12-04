@@ -45,24 +45,38 @@ public class TeleOp extends LinearOpMode {
 
             if (gamepad1.left_stick_button) {
                 direction = -direction;
-                sleep(100);
+                sleep(50);
             }
 
             //Gamepad 2
 
             if (gamepad2.y) {
-                r.intakeArm.setPower(-1);
+                r.extendingArm.setPower(1);
             } else if (gamepad2.a) {
-                r.intakeArm.setPower(1);
+                r.extendingArm.setPower(-1);
             } else {
-                r.intakeArm.setPower(0);
+                r.extendingArm.setPower(0);
             }
 
-            if (gamepad2.right_bumper) {
+            if (gamepad2.b) {
+                r.extendingArm.setPower(1);
+            } else if (gamepad2.x) {
+                r.extendingArm.setPower(-1);
+            } else {
+                r.extendingArm.setPower(0);
+            }
+
+            if (gamepad2.right_bumper) { //outtake
+                r.leftBox.setPosition(0.5);
+                r.leftBox.setPosition(0.5);
                 r.intake.setPower(-0.6);
             } else if (gamepad2.left_bumper) {
+                r.leftBox.setPosition(0.5);
+                r.leftBox.setPosition(0.5);
                 r.intake.setPower(0.6);
             } else
+                r.leftBox.setPosition(0);
+                r.leftBox.setPosition(0);
                 r.intake.setPower(0);
 
             if (gamepad2.dpad_up)

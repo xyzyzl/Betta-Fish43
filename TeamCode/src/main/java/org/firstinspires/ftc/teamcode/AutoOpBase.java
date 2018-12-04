@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Robot;
 
 import java.util.List;
 
@@ -28,9 +27,10 @@ public abstract class AutoOpBase extends LinearOpMode {
         sleep(4200);
         r.winch.setPower(0);
         sampling();
-        driveBackwardDistance(2, 0.3);
-        mecanumStrafeRightTime(0.8, 400);
-        driveForwardDistance(10, 0.5);
+        driveForwardDistance(10, 0.3);
+        r.winch.setPower(1);
+        sleep(4200);
+        r.winch.setPower(0);
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -307,14 +307,14 @@ public abstract class AutoOpBase extends LinearOpMode {
 
     public void dropMarker() {
         if(opModeIsActive()) {
-            r.intakeArm.setPower(0.5);
+            r.leftBox.setPosition(0.5);
+            r.rightBox.setPosition(0.5);
             sleep(200);
-            r.intake.setPower(0.7);
-            sleep(4000); //spin outward for 4 secs.
+            r.intake.setPower(-0.7);
+            sleep(3000); //spin outward for 3 secs.
             r.intake.setPower(0);
-            r.intakeArm.setPower(-1);
-            sleep(1500);
-            r.intakeArm.setPower(0);
+            r.leftBox.setPosition(0);
+            r.rightBox.setPosition(0);
         }
     }
 

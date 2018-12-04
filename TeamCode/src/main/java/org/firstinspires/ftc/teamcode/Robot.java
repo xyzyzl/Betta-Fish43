@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 /*
@@ -29,7 +30,10 @@ public class Robot {
     public DcMotor leftBack;
     public DcMotor rightBack;
     public DcMotor winch;
-    public DcMotor intakeArm;
+    public DcMotor rotatingArm;
+    public DcMotor extendingArm;
+    public Servo leftBox;
+    public Servo rightBox;
     public DcMotor intake;
 
     // preset speeds
@@ -84,9 +88,13 @@ public class Robot {
         leftBack = hardwareMap.get(DcMotor.class, "lb");
         rightBack = hardwareMap.get(DcMotor.class, "rb");
 
-        winch = hardwareMap.get(DcMotor.class, "wi");
-        intakeArm = hardwareMap.get(DcMotor.class, "ia");
-        intake = hardwareMap.get(DcMotor.class, "in");
+        //winch = hardwareMap.get(DcMotor.class, "wi");
+        //rotatingArm = hardwareMap.get(DcMotor.class, "ra");
+        //extendingArm = hardwareMap.get(DcMotor.class, "ea");
+        //intake = hardwareMap.get(DcMotor.class, "in");
+
+        leftBox = hardwareMap.get(Servo.class, "lbox");
+        rightBox = hardwareMap.get(Servo.class, "rbox");
 
         /* Initialize Telemetry */
 
@@ -241,7 +249,8 @@ public class Robot {
         leftBack.setPower(0);
         leftFront.setPower(0);
         winch.setPower(0);
-        intakeArm.setPower(0);
+        rotatingArm.setPower(0);
+        extendingArm.setPower(0);
         intake.setPower(0);
     }
 
@@ -293,7 +302,7 @@ public class Robot {
      */
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "scrim", "id", hardwareMap.appContext.getPackageName());
+                "final", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
         tfodParameters.minimumConfidence = 0.6;

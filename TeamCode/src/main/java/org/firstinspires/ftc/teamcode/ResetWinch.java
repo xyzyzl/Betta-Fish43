@@ -14,8 +14,9 @@ public class ResetWinch extends AutoOpBase {
 
         waitForStart();
 
+        r.winch.setPower(1);
+
         while (opModeIsActive()) {
-            r.winch.setPower(1);
             idle();
         }
 
