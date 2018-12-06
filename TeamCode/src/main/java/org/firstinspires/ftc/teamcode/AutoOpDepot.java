@@ -36,7 +36,7 @@ public class AutoOpDepot extends AutoOpBase {
             driveForwardDistance(r.getCurrentAngle(),54, 1);
         }
 
-        turnLeftToAngle(r.getCurrentAngle() + 7);
+        turnLeftToAngle(r.getCurrentAngle() + 7); //turn to depot
         sleep(200);
 
         mecanumStrafeLeftTime(0.5, 600);

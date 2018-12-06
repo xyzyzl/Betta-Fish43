@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 public class TeleOp extends LinearOpMode {
     Robot r = new Robot();
     int direction = 1;
+    double position = 1;
 
     public void runOpMode() throws InterruptedException {
         // Initialize the drive system variables.
@@ -28,9 +29,9 @@ public class TeleOp extends LinearOpMode {
 
             //Gamepad 1
 
-            if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y < 0.2)
+            if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y < -0.2)
                 r.driveForward(Math.abs(gamepad1.left_stick_y) * direction);
-            else if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y > -0.2)
+            else if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y > 0.2)
                 r.driveBackward(Math.abs(gamepad1.left_stick_y) * direction);
             else if (gamepad1.right_stick_x > 0.2)
                 r.turnRight(Math.abs(gamepad1.right_stick_x));
@@ -45,39 +46,43 @@ public class TeleOp extends LinearOpMode {
 
             if (gamepad1.left_stick_button) {
                 direction = -direction;
-                sleep(50);
+                while (gamepad1.left_stick_button) {
+                    //DO NOTHING UNTIL RELEASED
+                }
             }
 
             //Gamepad 2
 
-            if (gamepad2.y) {
+            if (gamepad2.y) { //slide up
                 r.extendingArm.setPower(1);
-            } else if (gamepad2.a) {
+            } else if (gamepad2.a) { //slide down
                 r.extendingArm.setPower(-1);
             } else {
                 r.extendingArm.setPower(0);
             }
 
-            if (gamepad2.b) {
+            if (gamepad2.b) { //rotate up
                 r.extendingArm.setPower(1);
-            } else if (gamepad2.x) {
+            } else if (gamepad2.x) { //rotate down
                 r.extendingArm.setPower(-1);
             } else {
                 r.extendingArm.setPower(0);
             }
 
-            if (gamepad2.right_bumper) { //outtake
-                r.leftBox.setPosition(0.5);
-                r.leftBox.setPosition(0.5);
-                r.intake.setPower(-0.6);
-            } else if (gamepad2.left_bumper) {
-                r.leftBox.setPosition(0.5);
-                r.leftBox.setPosition(0.5);
-                r.intake.setPower(0.6);
-            } else
-                r.leftBox.setPosition(0);
-                r.leftBox.setPosition(0);
-                r.intake.setPower(0);
+            r.leftBox.setPosition(position);
+            r.rightBox.setPosition(position);
+
+            if (gamepad2.right_trigger > 0.1 && r.leftBox.getPosition() <= 1 && r.rightBox.getPosition() <= 1) {
+                position += 0.005;
+            } else if (gamepad2.left_trigger > 0.1 && r.leftBox.getPosition() >= 0.35 && r.rightBox.getPosition() >= 0.35) {
+                position -= 0.005;
+            }
+
+            if (gamepad2.left_bumper) {
+                r.intake.setPower(-1);
+            } else if (gamepad2.right_bumper) {
+                r.intake.setPower(1);
+            }
 
             if (gamepad2.dpad_up)
                 r.winch.setPower(-1);

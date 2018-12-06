@@ -96,36 +96,9 @@ public class Robot {
         leftBox = hardwareMap.get(Servo.class, "lbox");
         rightBox = hardwareMap.get(Servo.class, "rbox");
 
-        /* Initialize Telemetry */
-
-        // telemetry feedback display
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        // initiate "getCurrentPosition"
-
-        //int getCurrentPosition();
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                leftFront.getCurrentPosition(),
-                rightFront.getCurrentPosition(),
-                leftBack.getCurrentPosition(),
-                rightBack.getCurrentPosition());
-        telemetry.update();
-
-        // NeverRest Encoders
-//    static final double COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: NeveRest Motor Encoder
-//    static final double DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-//    static final double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-//    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
-
         stopDriving();
+
+        initGyro();
 
     }
 
@@ -262,7 +235,7 @@ public class Robot {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-    public void initGyro() {
+    private void initGyro() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
