@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -30,11 +31,9 @@ public class Robot {
     public DcMotor leftBack;
     public DcMotor rightBack;
     public DcMotor winch;
-    public DcMotor rotatingArm;
-    public DcMotor extendingArm;
-    public Servo leftBox;
-    public Servo rightBox;
-    public DcMotor intake;
+    //public DcMotor rotatingArm;
+    //public DcMotor extendingArm;
+    //public DcMotor intake;
 
     // preset speeds
     public static final double COUNTS_PER_MOTOR_REV = 1120;    // Motor Encoder
@@ -66,7 +65,7 @@ public class Robot {
     public final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     public final String LABEL_GOLD_MINERAL = "Gold Mineral";
     public final String LABEL_SILVER_MINERAL = "Silver Mineral";
-    public int location = -1;
+    public int sampling = -1;
 
     public final String VUFORIA_KEY = "AfxXQqT/////AAABmeV5q1PmwEdgj5TLHPs/fLpiSGjLwPtQfI0I2e7Trulm22828KlsKt1Yd8h7HyvouNBn+ATRb8cYn84cJZZEkO8fOMNNP3fpxrM24Mws75J37WlwNYI4jPWLwGYl8R1URCO03RWUfI5DU+/RwL916RQGJZn+W6zjjzEAepEeMkTxXlxef3iaufyDtHzXalQMWkTURL8L+glxH0fzupa03nHyyZZYkz1ByycMR6dBnMo/VQOljRbdf+cU0NWnxUiR5L7Afnxrb3E+rcAgA7dy2WQA98Hx/0GGXeYQoF9Xtnve6CiqEoTpcxNs2HNvwpC658wd6p11yxYPZKj/tHLlIyQq6gYPA/1A1o1shPFQKt+e";
 
@@ -88,13 +87,10 @@ public class Robot {
         leftBack = hardwareMap.get(DcMotor.class, "lb");
         rightBack = hardwareMap.get(DcMotor.class, "rb");
 
-        //winch = hardwareMap.get(DcMotor.class, "wi");
+        winch = hardwareMap.get(DcMotor.class, "wi");
         //rotatingArm = hardwareMap.get(DcMotor.class, "ra");
         //extendingArm = hardwareMap.get(DcMotor.class, "ea");
         //intake = hardwareMap.get(DcMotor.class, "in");
-
-        leftBox = hardwareMap.get(Servo.class, "lbox");
-        rightBox = hardwareMap.get(Servo.class, "rbox");
 
         stopDriving();
 
@@ -130,10 +126,10 @@ public class Robot {
     }
 
     public void driveForward(double leftPower, double rightPower) {
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setPower(rightPower);
         rightFront.setPower(rightPower);
         leftBack.setPower(leftPower);
@@ -169,10 +165,10 @@ public class Robot {
     }
 
     public void turnLeft(double power) {
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setPower(power);
         leftFront.setPower(power);
         rightBack.setPower(power);
@@ -180,19 +176,12 @@ public class Robot {
     }
 
     public void turnRight(double power) {
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setPower(power);
-        rightFront.setPower(power);
-        leftBack.setPower(power);
-        leftFront.setPower(power);
+        turnLeft(-power);
     }
 
     public void mecanumStrafeLeft(double power) {
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setPower(power);
@@ -202,14 +191,7 @@ public class Robot {
     }
 
     public void mecanumStrafeRight(double power) {
-        rightBack.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setPower(power);
-        rightFront.setPower(power);
-        leftBack.setPower(power);
-        leftFront.setPower(power);
+        mecanumStrafeLeft(-power);
     }
 
     public void stopDriving() {
@@ -222,9 +204,9 @@ public class Robot {
         leftBack.setPower(0);
         leftFront.setPower(0);
         winch.setPower(0);
-        rotatingArm.setPower(0);
-        extendingArm.setPower(0);
-        intake.setPower(0);
+        //rotatingArm.setPower(0);
+        //extendingArm.setPower(0);
+        //intake.setPower(0);
     }
 
     public boolean isBusy() {
@@ -247,8 +229,8 @@ public class Robot {
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        this.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        this.imu.initialize(parameters);
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity = imu.getGravity();
@@ -278,7 +260,7 @@ public class Robot {
                 "final", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
-        tfodParameters.minimumConfidence = 0.6;
+        tfodParameters.minimumConfidence = 0.4;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }

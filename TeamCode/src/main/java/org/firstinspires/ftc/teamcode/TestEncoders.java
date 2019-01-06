@@ -15,28 +15,19 @@ public class TestEncoders extends AutoOpBase {
 
         waitForStart();
 
-        turnLeftToAngle(45);
-        sleep(2000);
-        telemetry.addData("Start Angle: ", r.getCurrentAngle());
-        telemetry.update();
-
-        driveForwardDistance(10, 0.5);
-        sleep(3000);
-
-        turnLeftToAngle(90);
-        sleep(2000);
-        telemetry.addData("Middle Angle: ", r.getCurrentAngle());
-        telemetry.update();
-
-        driveForwardDistance(10, 0.5);
-        sleep(3000);
-
-        turnLeftToAngle(270);
-        sleep(2000);
-        telemetry.addData("End Angle: ", r.getCurrentAngle());
-        telemetry.update();
-
         while (opModeIsActive()) {
+
+            telemetry.addData("Angle", r.getCurrentAngle());
+            telemetry.update();
+
+            if(gamepad1.left_bumper)
+                r.turnLeft(0.1);
+            else if(gamepad1.right_bumper)
+                r.turnRight(0.1);
+            else
+                r.stopDriving();
+
+
             idle();
         }
 

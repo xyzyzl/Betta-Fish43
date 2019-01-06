@@ -52,7 +52,7 @@ public class TeleOp extends LinearOpMode {
             }
 
             //Gamepad 2
-
+/*
             if (gamepad2.y) { //slide up
                 r.extendingArm.setPower(1);
             } else if (gamepad2.a) { //slide down
@@ -69,21 +69,12 @@ public class TeleOp extends LinearOpMode {
                 r.extendingArm.setPower(0);
             }
 
-            r.leftBox.setPosition(position);
-            r.rightBox.setPosition(position);
-
-            if (gamepad2.right_trigger > 0.1 && r.leftBox.getPosition() <= 1 && r.rightBox.getPosition() <= 1) {
-                position += 0.005;
-            } else if (gamepad2.left_trigger > 0.1 && r.leftBox.getPosition() >= 0.35 && r.rightBox.getPosition() >= 0.35) {
-                position -= 0.005;
-            }
-
             if (gamepad2.left_bumper) {
                 r.intake.setPower(-1);
             } else if (gamepad2.right_bumper) {
                 r.intake.setPower(1);
             }
-
+*/
             if (gamepad2.dpad_up)
                 r.winch.setPower(-1);
             else if (gamepad2.dpad_down)

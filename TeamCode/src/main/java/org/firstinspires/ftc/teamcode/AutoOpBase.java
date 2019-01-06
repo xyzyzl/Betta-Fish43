@@ -20,19 +20,17 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.init(hardwareMap, telemetry);
         r.resetEncoders();
         r.setUseEncoderMode();
-        r.leftBox.setDirection(Servo.Direction.REVERSE);
-        r.rightBox.setDirection(Servo.Direction.FORWARD);
     }
 
     public void startRobot() throws InterruptedException {
-        r.winch.setPower(-1);
-        sleep(4200);
-        r.winch.setPower(0);
+        //r.winch.setPower(1);
+        //sleep(10000);
+        //r.winch.setPower(0);
         sampling();
-        driveForwardDistance(10, 0.3);
-        r.winch.setPower(1);
-        sleep(4200);
-        r.winch.setPower(0);
+        driveForwardDistance(r.getCurrentAngle(),4, 0.2);
+        //r.winch.setPower(-1);
+        //sleep(4200);
+        //r.winch.setPower(0);
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -73,37 +71,8 @@ public abstract class AutoOpBase extends LinearOpMode {
 
         }
         r.stopDriving();
+        sleep(100);
         r.setUseEncoderMode();
-    }
-
-    public void driveForwardDistance(int forwardInches, double driveSpeed) {
-        int newRightBackTarget;
-        int newLeftBackTarget;
-        int newRightFrontTarget;
-        int newLeftFrontTarget;
-
-        if (opModeIsActive()) {
-            newRightBackTarget = r.rightBack.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
-            newLeftBackTarget = r.leftBack.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
-            newRightFrontTarget = r.rightFront.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
-            newLeftFrontTarget = r.leftFront.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
-
-            r.rightBack.setTargetPosition(newRightBackTarget);
-            r.rightFront.setTargetPosition(newRightFrontTarget);
-            r.leftBack.setTargetPosition(newLeftBackTarget);
-            r.leftFront.setTargetPosition(newLeftFrontTarget);
-
-            r.setRunToPositionMode();
-
-            r.driveForward(driveSpeed);
-
-            while (opModeIsActive() && r.isBusy()) {
-                // Do nothing.
-            }
-
-            r.stopDriving();
-            r.setUseEncoderMode();
-        }
     }
 
     public void driveBackwardDistance(double maintainAngle, int backwardInches, double driveSpeed) {
@@ -145,12 +114,9 @@ public abstract class AutoOpBase extends LinearOpMode {
             }
 
             r.stopDriving();
+            sleep(100);
             r.setUseEncoderMode();
         }
-    }
-
-    public void driveBackwardDistance(int backwardInches, double driveSpeed) {
-        driveForwardDistance(-1 * backwardInches, driveSpeed);
     }
 
     public void turnLeftToAngle(double targetAngle) {
@@ -174,6 +140,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         r.stopDriving();
+        sleep(100);
         r.setUseEncoderMode();
     }
 
@@ -214,6 +181,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         r.stopDriving();
+        sleep(100);
         r.setUseEncoderMode();
     }
 
@@ -239,6 +207,7 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.mecanumStrafeLeft(power);
             sleep(time);
             r.stopDriving();
+            sleep(100);
         }
     }
 
@@ -247,6 +216,7 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.mecanumStrafeRight(power);
             sleep(time);
             r.stopDriving();
+            sleep(100);
         }
     }
 
@@ -285,13 +255,13 @@ public abstract class AutoOpBase extends LinearOpMode {
                         if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                             if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                 telemetry.addData("Gold Mineral Position", "Left");
-                                r.location = 0;
+                                r.sampling = 0;
                             } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                 telemetry.addData("Gold Mineral Position", "Right");
-                                r.location = 2;
+                                r.sampling = 2;
                             } else {
                                 telemetry.addData("Gold Mineral Position", "Center");
-                                r.location = 1;
+                                r.sampling = 1;
                             }
                         }
                         telemetry.update();
@@ -309,14 +279,10 @@ public abstract class AutoOpBase extends LinearOpMode {
 
     public void dropMarker() {
         if(opModeIsActive()) {
-            r.leftBox.setPosition(0.5);
-            r.rightBox.setPosition(0.5);
             sleep(200);
-            r.intake.setPower(-0.7);
+            //r.intake.setPower(-0.7);
             sleep(3000); //spin outward for 3 secs.
-            r.intake.setPower(0);
-            r.leftBox.setPosition(0);
-            r.rightBox.setPosition(0);
+            //r.intake.setPower(0);
         }
     }
 

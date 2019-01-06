@@ -17,37 +17,45 @@ public class AutoOpDepot extends AutoOpBase {
         startRobot(); //drops down, views the minerals, and drives forward
 
         //SAMPLING CODE
-        if(r.location == 0) { //left from robot's point of view
-            mecanumStrafeLeftTime(0.5, 1000);
-            driveForwardDistance(r.getCurrentAngle(),10, 0.5);
-            driveBackwardDistance(r.getCurrentAngle(),5, 0.5);
-            turnRightToAngle(r.getCurrentAngle() - 90);
-            driveForwardDistance(r.getCurrentAngle(),20, 1);
-        } else if (r.location == 2) { //right from robot's point of view
-            driveForwardDistance(r.getCurrentAngle(),10, 0.5);
-            driveBackwardDistance(r.getCurrentAngle(),5, 0.5);
-            turnRightToAngle(r.getCurrentAngle() - 90);
-            driveForwardDistance(r.getCurrentAngle(),37, 1);
-        } else { //center from robot's point of view
-            mecanumStrafeRightTime(0.5, 1000);
-            driveForwardDistance(r.getCurrentAngle(),10, 0.5);
-            driveBackwardDistance(r.getCurrentAngle(),5, 0.5);
-            turnRightToAngle(r.getCurrentAngle() - 90);
-            driveForwardDistance(r.getCurrentAngle(),54, 1);
+        switch (r.sampling) {
+            case 0: //gold mineral is left from robot's point of view
+                mecanumStrafeLeftTime(0.3, 1500);
+                driveForwardDistance(r.getCurrentAngle(), 5, 0.1);
+                driveBackwardDistance(r.getCurrentAngle(), 5, 0.1);
+                turnRightToAngle(-90);
+                driveBackwardDistance(r.getCurrentAngle(), 10, 0.1);
+                break;
+            case 1: //gold mineral is center from robot's point of view
+                driveForwardDistance(r.getCurrentAngle(),5, 0.1);
+                driveBackwardDistance(r.getCurrentAngle(),5, 0.1);
+                turnRightToAngle(-90);
+                driveBackwardDistance(r.getCurrentAngle(),15, 0.1);
+                break;
+            case 2: //gold mineral is right from robot's point of view
+                mecanumStrafeRightTime(0.3, 1500);
+                driveForwardDistance(r.getCurrentAngle(),5, 0.1);
+                driveBackwardDistance(r.getCurrentAngle(),5, 0.1);
+                turnRightToAngle(-90);
+                driveBackwardDistance(r.getCurrentAngle(),20, 0.1);
+                break;
+            default: //case 1
+                driveForwardDistance(r.getCurrentAngle(),5, 0.1);
+                driveBackwardDistance(r.getCurrentAngle(),5, 0.1);
+                turnRightToAngle(-90);
+                driveBackwardDistance(r.getCurrentAngle(),15, 0.1);
         }
 
-        turnLeftToAngle(r.getCurrentAngle() + 7); //turn to depot
-        sleep(200);
+        turnLeftToAngle(-45);
 
-        mecanumStrafeLeftTime(0.5, 600);
+        mecanumStrafeLeftTime(0.5, 3000); //align with wall
 
         mecanumStrafeRightTime(0.5, 500);
 
-        driveForwardDistance(r.getCurrentAngle(), 20, 0.7);
+        driveForwardDistance(r.getCurrentAngle(), 20, 0.1); //drive to depot
 
-        dropMarker();
+        //dropMarker();
 
-        driveBackwardDistance(r.getCurrentAngle(), 60, 0.7);
+        driveBackwardDistance(r.getCurrentAngle(), 60, 0.1); //drive to crater
 
         r.stopDriving();
 
@@ -56,6 +64,7 @@ public class AutoOpDepot extends AutoOpBase {
         }
 
         r.stop();
+
     }
 
 }
