@@ -23,14 +23,14 @@ public abstract class AutoOpBase extends LinearOpMode {
     }
 
     public void startRobot() throws InterruptedException {
-        //r.winch.setPower(1);
-        //sleep(10000);
-        //r.winch.setPower(0);
+        r.winch.setPower(1);
+        sleep(9000);
+        r.winch.setPower(0);
         sampling();
-        driveForwardDistance(r.getCurrentAngle(),4, 0.2);
-        //r.winch.setPower(-1);
-        //sleep(4200);
-        //r.winch.setPower(0);
+        driveForwardDistance(r.getCurrentAngle(),2, 0.2);
+        r.winch.setPower(-1);
+        sleep(8000);
+        r.winch.setPower(0);
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -280,9 +280,9 @@ public abstract class AutoOpBase extends LinearOpMode {
     public void dropMarker() {
         if(opModeIsActive()) {
             sleep(200);
-            //r.intake.setPower(-0.7);
+            r.intake.setPower(-0.7);
             sleep(3000); //spin outward for 3 secs.
-            //r.intake.setPower(0);
+            r.intake.setPower(0);
         }
     }
 
