@@ -14,8 +14,9 @@ public class AutoOpDepot extends AutoOpBase {
 
         waitForStart();
 
-        startRobot(); //drops down, views the minerals, and drives forward
-
+        //startRobot(); //views the minerals, drops down, and drives forward
+        driveForwardDistance(r.getCurrentAngle(), 2, 0.1);
+        r.sampling = 1;
         //SAMPLING CODE
         switch (r.sampling) {
             case 0: //gold mineral is left from robot's point of view
@@ -44,8 +45,6 @@ public class AutoOpDepot extends AutoOpBase {
                 turnRightToAngle(-90);
                 driveBackwardDistance(r.getCurrentAngle(),15, 0.05);
         }
-        telemetry.addData("Location", r.sampling); // checks the current position of the mineral
-        telemetry.update(); // since it got deleted :(
 
         turnLeftToAngle(-45);
 
@@ -55,7 +54,9 @@ public class AutoOpDepot extends AutoOpBase {
 
         driveForwardDistance(r.getCurrentAngle(), 20, 0.05); //drive to depot
 
-        dropMarker();
+        r.intake.setPower(-0.7);
+        sleep(3000); //spin outward for 3 secs.
+        r.intake.setPower(0);
 
         driveBackwardDistance(r.getCurrentAngle(), 60, 0.05); //drive to crater
 

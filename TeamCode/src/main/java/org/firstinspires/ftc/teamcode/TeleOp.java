@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 public class TeleOp extends LinearOpMode {
     Robot r = new Robot();
     int direction = 1;
-    double position = 1;
 
     public void runOpMode() throws InterruptedException {
         // Initialize the drive system variables.
@@ -25,6 +24,7 @@ public class TeleOp extends LinearOpMode {
             telemetry.addData("leftY", gamepad1.left_stick_y);
             telemetry.addData("rightX", gamepad1.right_stick_x);
             telemetry.addData("rightY", gamepad1.right_stick_y);
+            telemetry.addData("Direction", direction);
             telemetry.update();
 
             //Gamepad 1
@@ -73,6 +73,8 @@ public class TeleOp extends LinearOpMode {
                 r.intake.setPower(-1); //intake
             } else if (gamepad2.right_bumper) {
                 r.intake.setPower(1); //outtake
+            } else {
+                r.intake.setPower(0);
             }
 
             if (gamepad2.dpad_up)

@@ -53,7 +53,9 @@ public class AutoOpCrater extends AutoOpBase {
 
         driveForwardDistance(r.getCurrentAngle(), 20, 0.3); //drive to depot
 
-        //dropMarker();
+        r.intake.setPower(-0.7);
+        sleep(3000); //spin outward for 3 secs.
+        r.intake.setPower(0);
 
         driveBackwardDistance(r.getCurrentAngle(), 60, 0.3); //drive to crater
 

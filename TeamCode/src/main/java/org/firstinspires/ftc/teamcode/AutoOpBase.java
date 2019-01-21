@@ -23,11 +23,14 @@ public abstract class AutoOpBase extends LinearOpMode {
     }
 
     public void startRobot() throws InterruptedException {
+        r.rotatingArm.setPower(1);
+        sleep(2000);
+        r.rotatingArm.setPower(0);
+        sampling();
         r.winch.setPower(1);
         sleep(9000);
         r.winch.setPower(0);
-        sampling();
-        driveForwardDistance(r.getCurrentAngle(),2, 0.2);
+        driveForwardDistance(r.getCurrentAngle(), 2, 0.1);
         r.winch.setPower(-1);
         sleep(8000);
         r.winch.setPower(0);
@@ -63,10 +66,9 @@ public abstract class AutoOpBase extends LinearOpMode {
                     r.driveForward(driveSpeed, r.GO_STRAIGHT);
                 }
 
-                double endAngle = r.getCurrentAngle();
-
-                telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
-                telemetry.update();
+                //double endAngle = r.getCurrentAngle();
+                //telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
+                //telemetry.update();
             }
 
         }
@@ -107,10 +109,9 @@ public abstract class AutoOpBase extends LinearOpMode {
                     r.driveBackward(driveSpeed, r.GO_STRAIGHT);
                 }
 
-                double endAngle = r.getCurrentAngle();
-
-                telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
-                telemetry.update();
+                //double endAngle = r.getCurrentAngle();
+                //telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
+                //telemetry.update();
             }
 
             r.stopDriving();
@@ -152,9 +153,9 @@ public abstract class AutoOpBase extends LinearOpMode {
 
         while (opModeIsActive() && targetAngle > currentAngle) {
             // Keep turning.
-            currentAngle = r.getCurrentAngle();
-            telemetry.addData("Angle", currentAngle);
-            telemetry.update();
+            //currentAngle = r.getCurrentAngle();
+            //telemetry.addData("Angle", currentAngle);
+            //telemetry.update();
         }
 
         r.stopDriving();
@@ -193,10 +194,10 @@ public abstract class AutoOpBase extends LinearOpMode {
 
         while (opModeIsActive() && targetAngle < currentAngle) {
             // Keep turning.
-            currentAngle = r.getCurrentAngle();
-            telemetry.addData("Target Angle", targetAngle);
-            telemetry.addData("Current Angle", currentAngle);
-            telemetry.update();
+            //currentAngle = r.getCurrentAngle();
+            //telemetry.addData("Target Angle", targetAngle);
+            //telemetry.addData("Current Angle", currentAngle);
+            //telemetry.update();
         }
 
         r.stopDriving();
@@ -230,7 +231,7 @@ public abstract class AutoOpBase extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
-        /** Activate Tensor Flow Object Detection. */
+        //Activate Tensor Flow Object Detection.
         if (r.tfod != null) {
             r.tfod.activate();
         }
@@ -240,50 +241,40 @@ public abstract class AutoOpBase extends LinearOpMode {
                 // getUpdatedRecognitions() will return null if no new information is available since the last time that call was made.
                 List<Recognition> updatedRecognitions = r.tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null && updatedRecognitions.size() == 3) {
-                        int goldMineralX = -1;
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
-                        for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(r.LABEL_GOLD_MINERAL)) {
-                                goldMineralX = (int) recognition.getLeft();
-                            } else if (silverMineral1X == -1) {
-                                silverMineral1X = (int) recognition.getLeft();
-                            } else {
-                                silverMineral2X = (int) recognition.getLeft();
-                            }
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(r.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
                         }
-                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                            if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                                telemetry.addData("Gold Mineral Position", "Left");
-                                r.sampling = 0;
-                            } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                                telemetry.addData("Gold Mineral Position", "Right");
-                                r.sampling = 2;
-                            } else {
-                                telemetry.addData("Gold Mineral Position", "Center");
-                                r.sampling = 1;
-                            }
+                    }
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                            r.sampling = 0;
+                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                            r.sampling = 2;
+                        } else {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                            r.sampling = 1;
                         }
-                        telemetry.update();
+                    }
+                    telemetry.update();
 
-                        if (r.tfod != null) {
-                            r.tfod.shutdown();
-                        }
+                    if (r.tfod != null) {
+                        r.tfod.shutdown();
+                    }
 
-                        return;
+                    return;
                 }
 
             }
         }
     }
-
-    public void dropMarker() {
-        if(opModeIsActive()) {
-            sleep(200);
-            r.intake.setPower(-0.7);
-            sleep(3000); //spin outward for 3 secs.
-            r.intake.setPower(0);
-        }
-    }
-
 }
