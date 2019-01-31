@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by Tej Bade on 11/14/18.
  */
 
-@TeleOp(name="Test Encoders")
+@TeleOp(name = "Test Encoders")
 public class TestEncoders extends AutoOpBase {
 
     public void runOpMode() throws InterruptedException {
@@ -23,19 +23,21 @@ public class TestEncoders extends AutoOpBase {
             telemetry.addData("RB", r.leftBack.getPower());
             telemetry.update();
 
-            if(gamepad1.right_bumper) {
+            double maintain = r.getCurrentAngle();
+            driveForwardDistance(maintain,10, 1);
+
+/*
+            if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad2.left_stick_x) && gamepad2.left_stick_y < -0.2) {
                 driveForwardDistance(r.getCurrentAngle(), 10, 1);
-                while(gamepad1.right_bumper) {
-                    //DO NOTHING
-                }
-            } else if(gamepad1.left_bumper) {
-                r.driveForward(0.05);
+            } else if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y < -0.2) {
+                r.driveForward(1);
             } else
                 r.stopDriving();
-
+*/
             idle();
         }
 
+        r.stopDriving();
         r.stop();
 
     }

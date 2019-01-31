@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /*
  * Created by Tej Bade on 10/6/18.
@@ -20,11 +21,10 @@ public class TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Joystick value test
-            telemetry.addData("leftX", gamepad1.left_stick_x);
-            telemetry.addData("leftY", gamepad1.left_stick_y);
-            telemetry.addData("rightX", gamepad1.right_stick_x);
-            telemetry.addData("rightY", gamepad1.right_stick_y);
-            telemetry.addData("Direction", direction);
+            telemetry.addData("lb", r.leftBack.getPower());
+            telemetry.addData("lf", r.leftFront.getPower());
+            telemetry.addData("rb", r.rightBack.getPower());
+            telemetry.addData("rf", r.rightFront.getPower());
             telemetry.update();
 
             //Gamepad 1
@@ -44,6 +44,7 @@ public class TeleOp extends LinearOpMode {
             else
                 r.stopDriving();
 
+
             if (gamepad1.left_stick_button) {
                 direction = -direction;
                 while (gamepad1.left_stick_button) {
@@ -51,19 +52,20 @@ public class TeleOp extends LinearOpMode {
                 }
             }
 
+
             //Gamepad 2
 
-            if (gamepad2.y) { //slide up
+            if (gamepad2.y) { //rotate up
                 r.rotatingArm.setPower(0.8);
-            } else if (gamepad2.a) { //slide down
+            } else if (gamepad2.a) { //rotate down
                 r.rotatingArm.setPower(-0.8);
             } else {
                 r.rotatingArm.setPower(0);
             }
 
-            if (gamepad2.b) { //rotate up
+            if (gamepad2.b) { //extend out
                 r.extendingArm.setPower(0.8);
-            } else if (gamepad2.x) { //rotate down
+            } else if (gamepad2.x) { //extend in
                 r.extendingArm.setPower(-0.8);
             } else {
                 r.extendingArm.setPower(0);
@@ -91,4 +93,29 @@ public class TeleOp extends LinearOpMode {
 
     }
 
+    /*private void mecanumStrafeLeftTurn(double driveSpeed) {
+        double maintainAngle = r.getCurrentAngle();
+        while (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x < -0.2) {
+            float newAngle = r.getCurrentAngle();
+            if (Math.abs(newAngle - maintainAngle) > 1.5) {
+                r.turnLeft(0.1);
+            } else {
+                r.mecanumStrafeLeft(driveSpeed);
+            }
+        }
+
+    }
+
+    private void mecanumStrafeRightTurn(double driveSpeed) {
+        double maintainAngle = r.getCurrentAngle();
+        while (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x > 0.2) {
+            float newAngle = r.getCurrentAngle();
+            r.mecanumStrafeRight(driveSpeed);
+            while (Math.abs(newAngle - maintainAngle) > 1) {
+                r.turnRight(0.5);
+            }
+        }
+
+    }
+    */
 }

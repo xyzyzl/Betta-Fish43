@@ -24,16 +24,13 @@ public abstract class AutoOpBase extends LinearOpMode {
 
     public void startRobot() throws InterruptedException {
         r.rotatingArm.setPower(1);
-        sleep(2000);
+        sleep(1000);
         r.rotatingArm.setPower(0);
         sampling();
-        r.winch.setPower(1);
+        r.winch.setPower(-1);
         sleep(9000);
         r.winch.setPower(0);
-        driveForwardDistance(r.getCurrentAngle(), 2, 0.1);
-        r.winch.setPower(-1);
-        sleep(8000);
-        r.winch.setPower(0);
+        driveForwardDistance(r.getCurrentAngle(), 5, 0.5);
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -53,22 +50,23 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.driveForward(driveSpeed);
 
             while (opModeIsActive() && r.isBusy()) {
-                float newAngle = r.getCurrentAngle();
-                if (newAngle != maintainAngle && Math.abs(newAngle - maintainAngle) > 1) {
+                /*float newAngle = r.getCurrentAngle();
+                if (Math.abs(newAngle - newAngle) > 1) {
                     if (newAngle < maintainAngle) {
                         // bot veered right. give less power to the left motor.
-                        r.driveForward(driveSpeed, r.LEAN_LEFT);
+                        r.driveForwardLean(driveSpeed, r.LEAN_LEFT);
                     } else {
                         // bot veered left. give less power to the right motor.
-                        r.driveForward(driveSpeed, r.LEAN_RIGHT);
+                        r.driveForwardLean(driveSpeed, r.LEAN_RIGHT);
                     }
                 } else {
                     r.driveForward(driveSpeed, r.GO_STRAIGHT);
                 }
 
-                //double endAngle = r.getCurrentAngle();
-                //telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
-                //telemetry.update();
+                double endAngle = r.getCurrentAngle();
+                telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
+                telemetry.update();*/
+
             }
 
         }
@@ -93,20 +91,18 @@ public abstract class AutoOpBase extends LinearOpMode {
 
             r.setRunToPositionMode();
 
-            r.driveBackward(driveSpeed);
-
             while (opModeIsActive() && r.isBusy()) {
                 float newAngle = r.getCurrentAngle();
                 if (newAngle != maintainAngle && Math.abs(newAngle - maintainAngle) > 1) {
                     if (newAngle < maintainAngle) {
                         // bot veered right. give less power to the left motor.
-                        r.driveBackward(driveSpeed, r.LEAN_LEFT);
+                        r.driveBackwardLean(driveSpeed, r.LEAN_LEFT);
                     } else {
                         // bot veered left. give less power to the right motor.
-                        r.driveBackward(driveSpeed, r.LEAN_RIGHT);
+                        r.driveBackwardLean(driveSpeed, r.LEAN_RIGHT);
                     }
                 } else {
-                    r.driveBackward(driveSpeed, r.GO_STRAIGHT);
+                    r.driveBackwardLean(driveSpeed, r.GO_STRAIGHT);
                 }
 
                 //double endAngle = r.getCurrentAngle();
@@ -115,7 +111,7 @@ public abstract class AutoOpBase extends LinearOpMode {
             }
 
             r.stopDriving();
-            sleep(100);
+            sleep(200);
             r.setUseEncoderMode();
         }
     }
@@ -141,7 +137,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         r.stopDriving();
-        sleep(100);
+        sleep(200);
         r.setUseEncoderMode();
     }
 

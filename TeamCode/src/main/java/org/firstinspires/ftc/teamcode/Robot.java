@@ -17,7 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import com.qualcomm.robotcore.hardware.Servo;
+
+
 
 
 /*
@@ -136,9 +137,9 @@ public class Robot {
         leftFront.setPower(leftPower);
     }
 
-    public void driveForward(double power, int lean) {
+    public void driveForwardLean(double power, int lean) {
         if (lean == GO_STRAIGHT) {
-            driveForward(power, power);
+            driveForward(power);
         } else if (lean == LEAN_LEFT) {
             driveForward(power - power * LEAN_CORRECTION, power);
         } else if (lean == LEAN_RIGHT) {
@@ -154,7 +155,7 @@ public class Robot {
         driveForward(-leftPower, -rightPower);
     }
 
-    public void driveBackward(double power, int lean) {
+    public void driveBackwardLean(double power, int lean) {
         if (lean == GO_STRAIGHT) {
             driveBackward(power, power);
         } else if (lean == LEAN_LEFT) {
@@ -186,13 +187,14 @@ public class Robot {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setPower(power);
         rightFront.setPower(power);
-        leftBack.setPower(power);
-        leftFront.setPower(power);
+        leftBack.setPower(0.2*power);
+        leftFront.setPower(0.8*power);
     }
 
     public void mecanumStrafeRight(double power) {
         mecanumStrafeLeft(-power);
     }
+
 
     public void stopDriving() {
         driveForward(0);
@@ -217,7 +219,7 @@ public class Robot {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
     }
 
-    private void initGyro() {
+    private void initGyro() throws InterruptedException {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -231,6 +233,12 @@ public class Robot {
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        while (!imu.isGyroCalibrated())
+        {
+            java.lang.Thread.sleep(50);
+
+        }
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity = imu.getGravity();
@@ -260,7 +268,7 @@ public class Robot {
                 "final", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
-        tfodParameters.minimumConfidence = 0.4;
+        tfodParameters.minimumConfidence = 0.5;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
