@@ -24,7 +24,7 @@ public class TestEncoders extends AutoOpBase {
             telemetry.update();
 
             double maintain = r.getCurrentAngle();
-            driveForwardDistance(maintain,10, 1);
+            driveForwardDistance(maintain,10, 0.5);
 
 /*
             if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad2.left_stick_x) && gamepad2.left_stick_y < -0.2) {
