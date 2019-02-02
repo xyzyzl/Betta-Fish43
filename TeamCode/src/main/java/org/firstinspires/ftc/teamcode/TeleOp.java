@@ -56,7 +56,7 @@ public class TeleOp extends LinearOpMode {
             //Gamepad 2
 
             if (gamepad2.y) { //rotate up
-                r.rotatingArm.setPower(0.8);
+                r.rotatingArm.setPower(0.6);
             } else if (gamepad2.a) { //rotate down
                 r.rotatingArm.setPower(-0.8);
             } else {
@@ -66,7 +66,7 @@ public class TeleOp extends LinearOpMode {
             if (gamepad2.b) { //extend out
                 r.extendingArm.setPower(0.8);
             } else if (gamepad2.x) { //extend in
-                r.extendingArm.setPower(-0.8);
+                r.extendingArm.setPower(-1);
             } else {
                 r.extendingArm.setPower(0);
             }
@@ -93,29 +93,4 @@ public class TeleOp extends LinearOpMode {
 
     }
 
-    /*private void mecanumStrafeLeftTurn(double driveSpeed) {
-        double maintainAngle = r.getCurrentAngle();
-        while (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x < -0.2) {
-            float newAngle = r.getCurrentAngle();
-            if (Math.abs(newAngle - maintainAngle) > 1.5) {
-                r.turnLeft(0.1);
-            } else {
-                r.mecanumStrafeLeft(driveSpeed);
-            }
-        }
-
-    }
-
-    private void mecanumStrafeRightTurn(double driveSpeed) {
-        double maintainAngle = r.getCurrentAngle();
-        while (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x > 0.2) {
-            float newAngle = r.getCurrentAngle();
-            r.mecanumStrafeRight(driveSpeed);
-            while (Math.abs(newAngle - maintainAngle) > 1) {
-                r.turnRight(0.5);
-            }
-        }
-
-    }
-    */
 }

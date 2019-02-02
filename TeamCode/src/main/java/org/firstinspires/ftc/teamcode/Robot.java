@@ -185,10 +185,10 @@ public class Robot {
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setPower(power);
+        rightBack.setPower(0.8*power);
         rightFront.setPower(power);
-        leftBack.setPower(0.2*power);
-        leftFront.setPower(0.8*power);
+        leftBack.setPower(0.6*power);
+        leftFront.setPower(power);
     }
 
     public void mecanumStrafeRight(double power) {

@@ -20,17 +20,45 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.init(hardwareMap, telemetry);
         r.resetEncoders();
         r.setUseEncoderMode();
+        telemetry.addData("Initialization","Success");
+        telemetry.update();
     }
 
     public void startRobot() throws InterruptedException {
-        r.rotatingArm.setPower(1);
+        r.rotatingArm.setPower(0.8);
         sleep(1000);
         r.rotatingArm.setPower(0);
         sampling();
         r.winch.setPower(-1);
-        sleep(9000);
+        sleep(12000);
         r.winch.setPower(0);
-        driveForwardDistance(r.getCurrentAngle(), 5, 0.5);
+        driveForwardDistance(5, 0.5);
+    }
+
+    public void driveForwardDistance(int forwardInches, double driveSpeed) {
+        if (opModeIsActive()) {
+            int newRightBackTarget = r.rightBack.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
+            int newLeftBackTarget = r.leftBack.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
+            int newRightFrontTarget = r.rightFront.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
+            int newLeftFrontTarget = r.leftFront.getCurrentPosition() + (int) (forwardInches * r.COUNTS_PER_INCH);
+
+            r.rightBack.setTargetPosition(newRightBackTarget);
+            r.rightFront.setTargetPosition(newRightFrontTarget);
+            r.leftBack.setTargetPosition(newLeftBackTarget);
+            r.leftFront.setTargetPosition(newLeftFrontTarget);
+
+            r.setRunToPositionMode();
+
+            r.driveForward(driveSpeed);
+
+            while (opModeIsActive() && r.isBusy()) {
+
+            }
+
+        }
+        r.stopDriving();
+        sleep(100);
+        r.setUseEncoderMode();
     }
 
     public void driveForwardDistance(double maintainAngle, int forwardInches, double driveSpeed) {
@@ -50,7 +78,7 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.driveForward(driveSpeed);
 
             while (opModeIsActive() && r.isBusy()) {
-                /*float newAngle = r.getCurrentAngle();
+                float newAngle = r.getCurrentAngle();
                 if (Math.abs(newAngle - newAngle) > 1) {
                     if (newAngle < maintainAngle) {
                         // bot veered right. give less power to the left motor.
@@ -65,7 +93,7 @@ public abstract class AutoOpBase extends LinearOpMode {
 
                 double endAngle = r.getCurrentAngle();
                 telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
-                telemetry.update();*/
+                telemetry.update();
 
             }
 
@@ -73,6 +101,34 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.stopDriving();
         sleep(100);
         r.setUseEncoderMode();
+    }
+
+    public void driveBackwardDistance(int backwardInches, double driveSpeed) {
+        backwardInches = -1 * backwardInches;
+
+        if (opModeIsActive()) {
+            int newRightBackTarget = r.rightBack.getCurrentPosition() + (int) (backwardInches * r.COUNTS_PER_INCH);
+            int newLeftBackTarget = r.leftBack.getCurrentPosition() + (int) (backwardInches * r.COUNTS_PER_INCH);
+            int newRightFrontTarget = r.rightFront.getCurrentPosition() + (int) (backwardInches * r.COUNTS_PER_INCH);
+            int newLeftFrontTarget = r.leftFront.getCurrentPosition() + (int) (backwardInches * r.COUNTS_PER_INCH);
+
+            r.rightBack.setTargetPosition(newRightBackTarget);
+            r.rightFront.setTargetPosition(newRightFrontTarget);
+            r.leftBack.setTargetPosition(newLeftBackTarget);
+            r.leftFront.setTargetPosition(newLeftFrontTarget);
+
+            r.setRunToPositionMode();
+
+            r.driveBackward(driveSpeed);
+
+            while (opModeIsActive() && r.isBusy()) {
+
+            }
+
+            r.stopDriving();
+            sleep(200);
+            r.setUseEncoderMode();
+        }
     }
 
     public void driveBackwardDistance(double maintainAngle, int backwardInches, double driveSpeed) {
@@ -105,9 +161,10 @@ public abstract class AutoOpBase extends LinearOpMode {
                     r.driveBackwardLean(driveSpeed, r.GO_STRAIGHT);
                 }
 
-                //double endAngle = r.getCurrentAngle();
-                //telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
-                //telemetry.update();
+                double endAngle = r.getCurrentAngle();
+                telemetry.addData("Angle: ", "Start: " + maintainAngle + " End: " + endAngle);
+                telemetry.update();
+
             }
 
             r.stopDriving();
@@ -124,7 +181,7 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         // Check if the target angle is to the left of current angle
-        if (targetAngle > currentAngle) {
+        if (targetAngle < currentAngle) {
             turnLeftToAngleLocal(targetAngle);
         } else {
             // We will be crossing over the 180 mark.
@@ -137,24 +194,39 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         r.stopDriving();
-        sleep(200);
+        sleep(100);
         r.setUseEncoderMode();
     }
 
     private void turnLeftToAngleLocal(double targetAngle) {
         float currentAngle = r.getCurrentAngle();
-        if (opModeIsActive() && currentAngle < targetAngle) {
-            r.turnLeft(r.TURN_SPEED_NORMAL);
-        }
 
-        while (opModeIsActive() && targetAngle > currentAngle) {
+        r.turnLeft(r.TURN_SPEED_NORMAL);
+
+        while (opModeIsActive() && targetAngle < currentAngle) {
             // Keep turning.
-            //currentAngle = r.getCurrentAngle();
-            //telemetry.addData("Angle", currentAngle);
-            //telemetry.update();
+            currentAngle = r.getCurrentAngle();
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Current Angle", currentAngle);
+            telemetry.update();
+
         }
 
         r.stopDriving();
+    }
+
+    public void turnLeftToAngleBasic(double targetAngle) {
+        float currentAngle = r.getCurrentAngle();
+
+        r.turnLeft(0.7);
+
+        while (targetAngle < currentAngle) {
+            currentAngle = r.getCurrentAngle();
+        }
+
+        r.stopDriving();
+        sleep(100);
+        r.setUseEncoderMode();
     }
 
     public void turnRightToAngle(double targetAngle) {
@@ -190,13 +262,30 @@ public abstract class AutoOpBase extends LinearOpMode {
 
         while (opModeIsActive() && targetAngle < currentAngle) {
             // Keep turning.
-            //currentAngle = r.getCurrentAngle();
-            //telemetry.addData("Target Angle", targetAngle);
-            //telemetry.addData("Current Angle", currentAngle);
-            //telemetry.update();
+            currentAngle = r.getCurrentAngle();
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Current Angle", currentAngle);
+            telemetry.update();
         }
 
         r.stopDriving();
+    }
+
+    public void turnRightToAngleBasic(double targetAngle) {
+        float currentAngle = r.getCurrentAngle();
+
+        r.turnRight(0.3);
+
+        while (targetAngle > currentAngle) {
+            currentAngle = r.getCurrentAngle();
+            telemetry.addData("Target Angle", targetAngle);
+            telemetry.addData("Current Angle", currentAngle);
+            telemetry.update();
+        }
+
+        r.stopDriving();
+        sleep(100);
+        r.setUseEncoderMode();
     }
 
     public void mecanumStrafeLeftTime(double power, int time) {
@@ -233,10 +322,12 @@ public abstract class AutoOpBase extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
+
             if (r.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since the last time that call was made.
                 List<Recognition> updatedRecognitions = r.tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null && updatedRecognitions.size() == 3) {
+                    sleep(50);
                     int goldMineralX = -1;
                     int silverMineral1X = -1;
                     int silverMineral2X = -1;
@@ -249,7 +340,8 @@ public abstract class AutoOpBase extends LinearOpMode {
                             silverMineral2X = (int) recognition.getLeft();
                         }
                     }
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+
+                    if(goldMineralX != -1 && silverMineral1X != 1 && silverMineral2X != -1) {
                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
                             r.sampling = 0;
@@ -260,17 +352,41 @@ public abstract class AutoOpBase extends LinearOpMode {
                             telemetry.addData("Gold Mineral Position", "Center");
                             r.sampling = 1;
                         }
-                    }
-                    telemetry.update();
 
-                    if (r.tfod != null) {
-                        r.tfod.shutdown();
+                        telemetry.update();
+
+                        if (r.tfod != null) {
+                            r.tfod.shutdown();
+                        }
+
+                        return;
                     }
 
-                    return;
                 }
 
             }
         }
+    }
+
+    public void turnLeftTime(double power, int time) {
+        r.turnLeft(power);
+        sleep(time);
+        r.stopDriving();
+    }
+
+    public void turnRightTime(double power, int time) {
+        r.turnRight(power);
+        sleep(time);
+        r.stopDriving();
+    }
+
+
+    public void dropMarker() {
+        r.rotatingArm.setPower(-1);
+        sleep(1000);
+        r.rotatingArm.setPower(0);
+        r.intake.setPower(-0.4);
+        sleep(900);
+        r.intake.setPower(0);
     }
 }
