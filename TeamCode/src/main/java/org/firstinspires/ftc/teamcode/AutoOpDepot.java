@@ -39,8 +39,8 @@ public class AutoOpDepot extends AutoOpBase {
                 turnRightTime(0.7, 200);
                 driveForwardDistance(30, 0.7);
                 driveBackwardDistance(23, 0.7);
-                turnLeftTime(0.7, 400);
-                driveForwardDistance(35, 0.7);
+                turnLeftTime(0.7, 625);
+                driveForwardDistance(40, 0.7);
                 turnRightTime(0.7,650);
                 driveForwardDistance(25, 0.7);
                 dropMarker();
