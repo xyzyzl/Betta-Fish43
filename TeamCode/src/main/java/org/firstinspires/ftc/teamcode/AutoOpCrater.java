@@ -15,7 +15,7 @@ public class AutoOpCrater extends AutoOpBase {
         waitForStart();
 
         startRobot(); //drop down, sample and strafe out of hook
-/*
+
         //SAMPLING CODE
         switch (r.sampling) {
             case 2: //gold mineral is left from robot's point of view
@@ -52,7 +52,7 @@ public class AutoOpCrater extends AutoOpBase {
                 dropMarker();
                 driveBackwardDistance(r.getCurrentAngle(),65, 1);
         }
-*/
+
 
         driveForwardDistance(25, 0.3);
 

@@ -33,7 +33,7 @@ public class AutoOpDepot extends AutoOpBase {
                 turnLeftTime(0.3, 1150);
                 driveForwardDistance(45, 0.7);
                 turnLeftTime(0.3, 700);
-                driveForwardDistance(10, 1);
+                driveForwardDistance(15, 1);
                 break;
             case 2: //gold mineral is right from robot's point of view
                 turnRightTime(0.7, 200);
@@ -53,7 +53,7 @@ public class AutoOpDepot extends AutoOpBase {
                 turnLeftTime(0.3, 1150);
                 driveForwardDistance(45, 0.7);
                 turnLeftTime(0.3, 700);
-                driveForwardDistance(10, 1);
+                driveForwardDistance(15, 1);
                 break;
         }
 

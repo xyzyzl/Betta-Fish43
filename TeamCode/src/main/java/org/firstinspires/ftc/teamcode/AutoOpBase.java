@@ -5,11 +5,8 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
 import java.util.List;
 
 public abstract class AutoOpBase extends LinearOpMode {
@@ -20,11 +17,11 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.init(hardwareMap, telemetry);
         r.resetEncoders();
         r.setUseEncoderMode();
-        telemetry.addData("Initialization","Success");
+        telemetry.addData("Initialization", "Success");
         telemetry.update();
     }
 
-    public void startRobot() throws InterruptedException {
+    public void startRobot() {
         r.rotatingArm.setPower(0.8);
         sleep(1000);
         r.rotatingArm.setPower(0);
@@ -215,18 +212,10 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.stopDriving();
     }
 
-    public void turnLeftToAngleBasic(double targetAngle) {
-        float currentAngle = r.getCurrentAngle();
-
-        r.turnLeft(0.7);
-
-        while (targetAngle < currentAngle) {
-            currentAngle = r.getCurrentAngle();
-        }
-
+    public void turnLeftTime(double power, int time) {
+        r.turnLeft(power);
+        sleep(time);
         r.stopDriving();
-        sleep(100);
-        r.setUseEncoderMode();
     }
 
     public void turnRightToAngle(double targetAngle) {
@@ -271,21 +260,10 @@ public abstract class AutoOpBase extends LinearOpMode {
         r.stopDriving();
     }
 
-    public void turnRightToAngleBasic(double targetAngle) {
-        float currentAngle = r.getCurrentAngle();
-
-        r.turnRight(0.3);
-
-        while (targetAngle > currentAngle) {
-            currentAngle = r.getCurrentAngle();
-            telemetry.addData("Target Angle", targetAngle);
-            telemetry.addData("Current Angle", currentAngle);
-            telemetry.update();
-        }
-
+    public void turnRightTime(double power, int time) {
+        r.turnRight(power);
+        sleep(time);
         r.stopDriving();
-        sleep(100);
-        r.setUseEncoderMode();
     }
 
     public void mecanumStrafeLeftTime(double power, int time) {
@@ -293,7 +271,6 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.mecanumStrafeLeft(power);
             sleep(time);
             r.stopDriving();
-            sleep(100);
         }
     }
 
@@ -302,11 +279,10 @@ public abstract class AutoOpBase extends LinearOpMode {
             r.mecanumStrafeRight(power);
             sleep(time);
             r.stopDriving();
-            sleep(100);
         }
     }
 
-    private void sampling() {
+    public void sampling() {
 
         r.initVuforia();
 
@@ -327,7 +303,6 @@ public abstract class AutoOpBase extends LinearOpMode {
                 // getUpdatedRecognitions() will return null if no new information is available since the last time that call was made.
                 List<Recognition> updatedRecognitions = r.tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null && updatedRecognitions.size() == 3) {
-                    sleep(50);
                     int goldMineralX = -1;
                     int silverMineral1X = -1;
                     int silverMineral2X = -1;
@@ -341,7 +316,8 @@ public abstract class AutoOpBase extends LinearOpMode {
                         }
                     }
 
-                    if(goldMineralX != -1 && silverMineral1X != 1 && silverMineral2X != -1) {
+
+                    if (goldMineralX != -1 && silverMineral1X != 1 && silverMineral2X != -1) {
                         if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
                             r.sampling = 0;
@@ -361,25 +337,11 @@ public abstract class AutoOpBase extends LinearOpMode {
 
                         return;
                     }
-
                 }
 
             }
         }
     }
-
-    public void turnLeftTime(double power, int time) {
-        r.turnLeft(power);
-        sleep(time);
-        r.stopDriving();
-    }
-
-    public void turnRightTime(double power, int time) {
-        r.turnRight(power);
-        sleep(time);
-        r.stopDriving();
-    }
-
 
     public void dropMarker() {
         r.rotatingArm.setPower(-1);

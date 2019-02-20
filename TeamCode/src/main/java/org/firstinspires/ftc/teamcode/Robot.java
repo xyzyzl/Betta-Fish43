@@ -41,6 +41,7 @@ public class Robot {
     public static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     public static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    public static final int ARM_ROTATION = 2800;
 
     public static final double DRIVE_SPEED_SLOW = 0.25;
     public static final double DRIVE_SPEED_NORMAL = 0.5;
@@ -104,6 +105,8 @@ public class Robot {
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rotatingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        extendingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void setUseEncoderMode() {
@@ -112,6 +115,8 @@ public class Robot {
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotatingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extendingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setRunToPositionMode() {
@@ -195,16 +200,12 @@ public class Robot {
         mecanumStrafeLeft(-power);
     }
 
-
     public void stopDriving() {
         driveForward(0);
     }
 
     public void stop() {
-        rightBack.setPower(0);
-        rightFront.setPower(0);
-        leftBack.setPower(0);
-        leftFront.setPower(0);
+        stopDriving();
         winch.setPower(0);
         rotatingArm.setPower(0);
         extendingArm.setPower(0);
@@ -234,10 +235,8 @@ public class Robot {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated())
-        {
+        while (!imu.isGyroCalibrated()) {
             java.lang.Thread.sleep(50);
-
         }
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -268,7 +267,7 @@ public class Robot {
                 "final", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
-        tfodParameters.minimumConfidence = 0.5;
+        tfodParameters.minimumConfidence = 0.7;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }

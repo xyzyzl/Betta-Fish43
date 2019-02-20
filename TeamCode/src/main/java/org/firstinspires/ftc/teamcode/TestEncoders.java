@@ -15,13 +15,13 @@ public class TestEncoders extends AutoOpBase {
 
         waitForStart();
 
-        driveForwardDistance(r.getCurrentAngle(), 20, 0.5);
-
         while(opModeIsActive()) {
-            idle();
+            sampling();
+            telemetry.addData("Sampling", r.sampling);
+            telemetry.update();
         }
 
-        r.stopDriving();
+        r.stop();
 
     }
 

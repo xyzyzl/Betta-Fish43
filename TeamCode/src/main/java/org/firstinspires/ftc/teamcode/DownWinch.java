@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
  * Created by Tej Bade on 10/6/18.
  */
 
-@Autonomous(name="Reset Winch")
-public class ResetWinch extends AutoOpBase {
+@Autonomous(name="Down Winch")
+public class DownWinch extends AutoOpBase {
 
     public void runOpMode() throws InterruptedException {
         initRobot();
