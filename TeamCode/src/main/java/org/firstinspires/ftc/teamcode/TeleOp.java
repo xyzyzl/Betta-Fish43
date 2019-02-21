@@ -11,12 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class TeleOp extends LinearOpMode {
     Robot r = new Robot();
     int direction = 1;
-    int extendingLimit = 0;
-    int farRotationLimit = 0;
-    int closeRotationLimit = 0;
     int rotStop = 1;
-    int mode = 1;
-
+    double speed = 1;
 
     public void runOpMode() throws InterruptedException {
         // Initialize the drive system variables.
@@ -36,16 +32,10 @@ public class TeleOp extends LinearOpMode {
             else if (direction == -1)
                 telemetry.addData("Direction", "Reverse");
 
-            if (mode == 1)
-                telemetry.addData("Mode", "Crater");
-            else if (mode == -1)
-                telemetry.addData("Mode", "Lander");
+            telemetry.addData("Speed", speed);
 
-            if (rotStop == 1)
-                telemetry.addData("Rotation Stop", "1");
-            else if (rotStop == -1)
-                telemetry.addData("Rotation Stop", "2");
-
+            telemetry.addData("Rotation", r.rotatingArm.getCurrentPosition());
+            telemetry.addData("Extension", r.extendingArm.getCurrentPosition());
             telemetry.update();
 
             //Gamepad 1
@@ -57,97 +47,76 @@ public class TeleOp extends LinearOpMode {
                 }
             }
 
+            if (gamepad1.right_stick_button) {
+                if (speed == 1)
+                    speed = 0.3;
+                else if (speed == 0.3)
+                    speed = 1;
+                while (gamepad1.right_stick_button) {
+                    //DO NOTHING UNTIL RELEASED
+                }
+            }
+
             if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y < -0.2)
-                r.driveForward(Math.abs(gamepad1.left_stick_y) * direction);
+                r.driveForward(Math.abs(gamepad1.left_stick_y) * direction * speed);
             else if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad1.left_stick_x) && gamepad1.left_stick_y > 0.2)
-                r.driveBackward(Math.abs(gamepad1.left_stick_y) * direction);
+                r.driveBackward(Math.abs(gamepad1.left_stick_y) * direction * speed);
             else if (gamepad1.right_stick_x > 0.2)
-                r.turnRight(Math.abs(gamepad1.right_stick_x));
+                r.turnRight(Math.abs(gamepad1.right_stick_x) * speed);
             else if (gamepad1.right_stick_x < -0.2)
-                r.turnLeft(Math.abs(gamepad1.right_stick_x));
+                r.turnLeft(Math.abs(gamepad1.right_stick_x) * speed);
             else if (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x > 0.2)
-                r.mecanumStrafeRight(Math.abs(gamepad1.left_stick_x) * direction);
+                r.mecanumStrafeRight(Math.abs(gamepad1.left_stick_x) * direction * speed);
             else if (Math.abs(gamepad1.left_stick_x) > Math.abs(gamepad1.left_stick_y) && gamepad1.left_stick_x < -0.2)
-                r.mecanumStrafeLeft(Math.abs(gamepad1.left_stick_x) * direction);
+                r.mecanumStrafeLeft(Math.abs(gamepad1.left_stick_x) * direction * speed);
             else
                 r.stopDriving();
 
             //Gamepad 2
 
-            if (gamepad2.left_stick_button) {
-                rotStop = -rotStop;
-                if (rotStop == -1) { //lander
-                    r.rotatingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    r.extendingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    r.rotatingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    r.extendingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    extendingLimit = r.extendingArm.getCurrentPosition() + 1850;
-                    farRotationLimit = r.rotatingArm.getCurrentPosition() + 3800;
-                    closeRotationLimit = r.rotatingArm.getCurrentPosition() + 2100;
-                }
-
-                while (gamepad2.left_stick_button) {
-                    //DO NOTHING UNTIL RELEASED
-                }
+            if (gamepad2.dpad_left) { //Reset Encoders
+                r.rotatingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                r.extendingArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                r.rotatingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                r.extendingArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (gamepad2.right_stick_button) {
-                mode = -mode;
-                while (gamepad2.right_stick_button) {
-                    //DO NOTHING UNTIL RELEASED
-                }
-            }
-
-            if (mode == 1) { //crater
-                if (gamepad2.y)
-                    r.rotatingArm.setPower(0.5);
-                else if (gamepad2.a)
-                    r.rotatingArm.setPower(-0.5);
+            if (gamepad2.y) //Rotation
+                r.rotatingArm.setPower(1);
+            else if (gamepad2.left_stick_button) {
+                if (r.rotatingArm.getCurrentPosition() < 2100)
+                    r.rotatingArm.setPower(1);
                 else
                     r.rotatingArm.setPower(0);
+            } else if (gamepad2.right_stick_button) {
+                if (r.rotatingArm.getCurrentPosition() < 3600)
+                    r.rotatingArm.setPower(1);
+                else
+                    r.rotatingArm.setPower(0);
+            } else if (gamepad2.a)
+                r.rotatingArm.setPower(-1);
+            else
+                r.rotatingArm.setPower(0);
 
-                if (gamepad2.b) {
-                    r.extendingArm.setPower(1);
-                } else if (gamepad2.x) {
-                    r.extendingArm.setPower(-1);
-                } else
-                    r.extendingArm.setPower(0);
-
-            } else if (mode == -1) { //lander
-
-                if (rotStop == 1) {
-                    if (gamepad2.y && r.rotatingArm.getCurrentPosition() < closeRotationLimit)
-                        r.rotatingArm.setPower(0.5);
-                    else if (gamepad2.a)
-                        r.rotatingArm.setPower(-0.5);
-                    else
-                        r.rotatingArm.setPower(0);
-
-                } else if (rotStop == -1) {
-                    if (gamepad2.y && r.rotatingArm.getCurrentPosition() < farRotationLimit) {
-                        r.rotatingArm.setPower(0.8);
-                    } else if (gamepad2.a) {
-                        r.rotatingArm.setPower(-0.8);
-                    } else
-                        r.rotatingArm.setPower(0);
-                }
-
-                if (gamepad2.b && r.extendingArm.getCurrentPosition() < extendingLimit) {
+            if (gamepad2.b) //Extension
+                r.extendingArm.setPower(0.7);
+            else if (gamepad2.dpad_right) {
+                if (r.extendingArm.getCurrentPosition() < 2000)
                     r.extendingArm.setPower(0.7);
-                } else if (gamepad2.x) {
-                    r.extendingArm.setPower(-0.7);
-                } else
+                else
                     r.extendingArm.setPower(0);
+            } else if (gamepad2.x)
+                r.extendingArm.setPower(-0.7);
+            else
+                r.extendingArm.setPower(0);
 
-            }
-
-            if (gamepad2.left_bumper) {
+            if (gamepad2.left_bumper)
                 r.intake.setPower(-1); //outtake
-            } else if (gamepad2.right_bumper) {
+            else if (gamepad2.right_bumper)
                 r.intake.setPower(1); //intake
-            } else {
+            else
                 r.intake.setPower(0);
-            }
+
 
             if (gamepad2.dpad_up)
                 r.winch.setPower(-1);

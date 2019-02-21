@@ -22,8 +22,11 @@ public abstract class AutoOpBase extends LinearOpMode {
     }
 
     public void startRobot() {
-        r.rotatingArm.setPower(0.8);
-        sleep(1000);
+        r.extendingArm.setPower(0.5);
+        sleep(500);
+        r.extendingArm.setPower(0);
+        r.rotatingArm.setPower(1);
+        sleep(800);
         r.rotatingArm.setPower(0);
         sampling();
         r.winch.setPower(-1);
